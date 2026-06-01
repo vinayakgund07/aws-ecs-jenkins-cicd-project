@@ -1,0 +1,22 @@
+{
+  "family": "devops-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "devops-container",
+      "image": "ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/aws-ecs-jenkins-cicd-project:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ]
+}
