@@ -1,11 +1,10 @@
 pipeline {
-
     agent any
 
     environment {
         AWS_REGION = "ap-south-1"
         ECR_REPO = "aws-ecs-jenkins-cicd-project"
-        ACCOUNT_ID = "YOUR_ACCOUNT_ID"
+        ACCOUNT_ID = "820485071805"
     }
 
     stages {
@@ -48,15 +47,32 @@ pipeline {
             }
         }
 
-        stage('Deploy ECS') {
+        stage('Verify Image In ECR') {
             steps {
                 sh '''
-                aws ecs update-service \
-                --cluster devops-cluster \
-                --service devops-service \
-                --force-new-deployment
+                aws ecr list-images \
+                --repository-name ${ECR_REPO} \
+                --region ${AWS_REGION}
                 '''
             }
+        }
+
+        stage('Verify ECS Cluster') {
+            steps {
+                sh '''
+                aws ecs list-clusters
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
